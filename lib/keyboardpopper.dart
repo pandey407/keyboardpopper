@@ -1,5 +1,8 @@
 library keyboardpopper;
 
+import 'package:flutter/gestures.dart';
+import 'package:flutter/widgets.dart';
+
 /// Enumerates the gestures available for triggering the keyboard dismissal
 /// with [KeyboardPopper].
 ///
@@ -171,7 +174,126 @@ enum GestureType {
   onScaleEnd,
 }
 
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
+class KeyboardPopper extends StatelessWidget {
+  /// Creates a widget to dismiss the keyboard with specific gestures.
+  ///
+  /// The [gestures] property defines the gestures that trigger keyboard
+  /// dismissal. By default, tapping anywhere on the widget dismisses the
+  /// keyboard.
+  const KeyboardPopper({
+    Key? key,
+    this.child,
+    this.behavior,
+    this.gestures = const [GestureType.onTap],
+    this.dragStartBehavior = DragStartBehavior.start,
+    this.excludeFromSemantics = false,
+  }) : super(key: key);
+
+  /// The child widget contained within this KeyboardPopper.
+  final Widget? child;
+
+  /// Determines when a drag gesture formally begins when the user initiates it.
+  final DragStartBehavior dragStartBehavior;
+
+  /// Controls the behavior of the GestureDetector for hit testing.
+  final HitTestBehavior? behavior;
+
+  /// Excludes this widget's gestures from the semantics tree if set to true.
+  final bool excludeFromSemantics;
+
+  /// Defines the gestures that trigger keyboard dismissal.
+  final List<GestureType> gestures;
+
+  @override
+  Widget build(BuildContext context) {
+    // Create a GestureDetector with various gesture handlers.
+    final gestureDetector = GestureDetector(
+      excludeFromSemantics: excludeFromSemantics,
+      dragStartBehavior: dragStartBehavior,
+      behavior: behavior,
+      onTap: () => _unfocus(context, GestureType.onTap),
+      onTapDown: (_) => _unfocus(context, GestureType.onTapDown),
+      onTapUp: (_) => _unfocus(context, GestureType.onTapUp),
+      onTapCancel: () => _unfocus(context, GestureType.onTapCancel),
+      onSecondaryTapDown: (_) =>
+          _unfocus(context, GestureType.onSecondaryTapDown),
+      onSecondaryTapUp: (_) => _unfocus(context, GestureType.onSecondaryTapUp),
+      onSecondaryTapCancel: () =>
+          _unfocus(context, GestureType.onSecondaryTapCancel),
+      onDoubleTap: () => _unfocus(context, GestureType.onDoubleTap),
+      onLongPress: () => _unfocus(context, GestureType.onLongPress),
+      onLongPressStart: (_) => _unfocus(context, GestureType.onLongPressStart),
+      onLongPressMoveUpdate: (_) =>
+          _unfocus(context, GestureType.onLongPressMoveUpdate),
+      onLongPressUp: () => _unfocus(context, GestureType.onLongPressUp),
+      onLongPressEnd: (_) => _unfocus(context, GestureType.onLongPressEnd),
+      onVerticalDragDown: (_) =>
+          _unfocus(context, GestureType.onVerticalDragDown),
+      onVerticalDragStart: (_) =>
+          _unfocus(context, GestureType.onVerticalDragStart),
+      onVerticalDragUpdate: (details) => _unfocusWithDetails(context, details),
+      onVerticalDragEnd: (_) =>
+          _unfocus(context, GestureType.onVerticalDragEnd),
+      onVerticalDragCancel: () =>
+          _unfocus(context, GestureType.onVerticalDragCancel),
+      onHorizontalDragDown: (_) =>
+          _unfocus(context, GestureType.onHorizontalDragDown),
+      onHorizontalDragStart: (_) =>
+          _unfocus(context, GestureType.onHorizontalDragStart),
+      onHorizontalDragUpdate: (details) =>
+          _unfocusWithDetails(context, details),
+      onHorizontalDragEnd: (_) =>
+          _unfocus(context, GestureType.onHorizontalDragEnd),
+      onHorizontalDragCancel: () =>
+          _unfocus(context, GestureType.onHorizontalDragCancel),
+      onForcePressStart: (_) =>
+          _unfocus(context, GestureType.onForcePressStart),
+      onForcePressPeak: (_) => _unfocus(context, GestureType.onForcePressPeak),
+      onForcePressUpdate: (_) =>
+          _unfocus(context, GestureType.onForcePressUpdate),
+      onForcePressEnd: (_) => _unfocus(context, GestureType.onForcePressEnd),
+      onPanDown: (_) => _unfocus(context, GestureType.onPanDown),
+      onPanStart: (_) => _unfocus(context, GestureType.onPanStart),
+      onPanEnd: (_) => _unfocus(context, GestureType.onPanEnd),
+      onPanCancel: () => _unfocus(context, GestureType.onPanCancel),
+      onScaleStart: (_) => _unfocus(context, GestureType.onScaleStart),
+      onScaleUpdate: (_) => _unfocus(context, GestureType.onScaleUpdate),
+      onScaleEnd: (_) => _unfocus(context, GestureType.onScaleEnd),
+      child: child,
+    );
+
+    return gestureDetector;
+  }
+
+  // Function to unfocus the primary focus, i.e., dismiss the keyboard.
+  void _unfocus(BuildContext context, GestureType gestureType) {
+    if (gestures.contains(gestureType)) {
+      WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+    }
+  }
+
+  // Function to unfocus with additional details (e.g., pan direction).
+  void _unfocusWithDetails(BuildContext context, DragUpdateDetails details) {
+    final dy = details.delta.dy;
+    final dx = details.delta.dx;
+    final isDragMainlyHorizontal = dx.abs() - dy.abs() > 0;
+
+    if (gestures.contains(GestureType.onPanUpdateDownDirection) &&
+        dy > 0 &&
+        !isDragMainlyHorizontal) {
+      _unfocus(context, GestureType.onPanUpdateDownDirection);
+    } else if (gestures.contains(GestureType.onPanUpdateUpDirection) &&
+        dy < 0 &&
+        !isDragMainlyHorizontal) {
+      _unfocus(context, GestureType.onPanUpdateUpDirection);
+    } else if (gestures.contains(GestureType.onPanUpdateRightDirection) &&
+        dx > 0 &&
+        isDragMainlyHorizontal) {
+      _unfocus(context, GestureType.onPanUpdateRightDirection);
+    } else if (gestures.contains(GestureType.onPanUpdateLeftDirection) &&
+        dx < 0 &&
+        isDragMainlyHorizontal) {
+      _unfocus(context, GestureType.onPanUpdateLeftDirection);
+    }
+  }
 }
