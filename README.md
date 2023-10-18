@@ -1,39 +1,70 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# KeyboardPopper Widget
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+The `KeyboardPopper` is a Flutter widget designed to dismiss the on-screen keyboard when performing specific gestures or interactions outside of input fields, ensuring a smoother and more user-friendly experience.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+## Table of Contents
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+- [Installation](#installation)
+- [Usage](#usage)
 
-## Features
+## Installation
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+To use the `KeyboardPopper` widget in your Flutter project, follow these steps:
 
-## Getting started
+1. Add the following dependency to your project's `pubspec.yaml` file:
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+   ```yaml
+   dependencies:
+     keyboard_popper:
+       git:
+   ```
+
+2. Run the following command to fetch the package:
+
+   ```unix
+   flutter pub get
+   ```
+
+   Now, you're ready to use the KeyboardPopper widget in your project.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+The primary purpose of the `KeyboardPopper` widget is to automatically dismiss the on-screen keyboard when specific gestures or interactions are detected outside of input fields. To use it, wrap your existing widgets with the `KeyboardPopper` widget.
+
+Here's a basic example:
 
 ```dart
-const like = 'sample';
+    import 'package:flutter/material.dart';
+    import 'package:keyboard_popper/keyboard_popper.dart';
+
+    void main() {runApp(MyApp());}
+
+    class MyApp extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+        return MaterialApp(
+        home: KeyboardPopper(
+            child: Scaffold(
+            appBar: AppBar(
+                title: Text('KeyboardPopper Example'),
+            ),
+            body: Center(
+                child: Column(
+                children: <Widget>[
+                    TextField(
+                    decoration: InputDecoration(
+                        labelText: 'Tap here to show the keyboard',
+                    ),
+                    ),
+                    ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Tap me!'),
+                    ),
+                ],
+                ),
+            ),
+            ),
+        ));
+    }
+}
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
