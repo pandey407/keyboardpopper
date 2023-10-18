@@ -174,6 +174,57 @@ enum GestureType {
   onScaleEnd,
 }
 
+/// A widget designed to dismiss the on-screen keyboard when a gesture is
+/// performed. It's commonly used to ensure the keyboard is hidden when tapping
+/// outside of active input elements.
+///
+/// [KeyboardPopper] can be wrapped around any widget, and it will trigger
+/// keyboard dismissal when a gesture is performed within the area of the screen
+/// not occupied by other widgets that might handle the gesture. For example,
+/// if [KeyboardPopper] is configured to dismiss the keyboard on a [GestureType.onTap],
+/// it will dismiss the keyboard when tapped outside of regions occupied by
+/// widgets like buttons, which can consume the tap event and prevent dismissal.
+///
+/// A typical use case for [KeyboardPopper] involves wrapping an entire page,
+/// including its [Scaffold], to ensure the keyboard is dismissed when tapping
+/// on any inactive area of the screen. For instance:
+///
+/// ```dart
+/// class ExamplePage extends StatelessWidget {
+///   @override
+///   Widget build(BuildContext context) => KeyboardPopper(
+///     child: Scaffold(
+///       appBar: AppBar(
+///         title: Text('KeyboardPopper example'),
+///       ),
+///       body: Column(
+///         children: <Widget>[
+///           Padding(
+///             padding: const EdgeInsets.all(42.0),
+///             child: TextField(
+///               decoration: InputDecoration(
+///                 border: OutlineInputBorder(),
+///                 labelText: 'Tap to show the keyboard',
+///                 hintText: 'Tap elsewhere to dismiss',
+///               ),
+///             ),
+///           ),
+///           Center(
+///             child: RaisedButton(
+///               onPressed: () => print('Keyboard persists'),
+///               child: Text('Tap me!'),
+///             ),
+///           ),
+///         ],
+///       ),
+///     ),
+///   );
+/// }
+/// ```
+///
+/// Wrapping a [MaterialApp], [WidgetsApp], or [CupertinoApp] with a [KeyboardPopper]
+/// provides the desired behavior to the entire app since each [Scaffold] is
+/// considered a child of the corresponding app widget.
 class KeyboardPopper extends StatelessWidget {
   /// Creates a widget to dismiss the keyboard with specific gestures.
   ///
