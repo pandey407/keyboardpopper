@@ -16,7 +16,7 @@ To use the `KeyboardPopper` widget in your Flutter project, follow these steps:
    ```yaml
    dependencies:
      keyboard_popper:
-       git:
+       git: https://github.com/pandey407/keyboardpopper.git
    ```
 
 2. Run the following command to fetch the package:
