@@ -1,7 +1,7 @@
 name: keyboardpopper
-description: A new Flutter package project.
+description: A Flutter package that simplifies keyboard dismissal through intuitive gestures.
 version: 0.0.1
-homepage:
+homepage: https://github.com/pandey407/keyboardpopper
 
 environment:
   sdk: ">=3.0.6 <4.0.0"
