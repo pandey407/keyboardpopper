@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:keyboardpopper/keyboardpopper.dart';
+import 'package:keyboard_popper/keyboard_popper.dart';
 
 void main() {
   testWidgets('KeyboardPopper dismisses keyboard on tap',
